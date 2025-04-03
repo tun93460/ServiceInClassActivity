@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
             if (isConnected) {
                 if (timerBinder.isRunning) {
                     timerBinder.stop()
+                    timerTextView.text = "0"
                 }
             }
         }
