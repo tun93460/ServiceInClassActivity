@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_start -> start()
             R.id.action_stop -> stop()
+            else -> return false
         }
 
         return super.onOptionsItemSelected(item)
