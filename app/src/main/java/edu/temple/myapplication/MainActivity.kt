@@ -8,12 +8,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var timerTextView: TextView
+    private lateinit var timerTextView: TextView
 
     lateinit var timerBinder: TimerService.TimerBinder
     var isConnected = false
@@ -47,22 +49,43 @@ class MainActivity : AppCompatActivity() {
             BIND_AUTO_CREATE
         )
 
-        findViewById<Button>(R.id.startButton).setOnClickListener {
-            if (isConnected) {
-                if (timerBinder.paused || !timerBinder.isRunning) {
-                    timerBinder.start(20)
-                } else {
-                    timerBinder.pause()
-                }
+        findViewById<Button>(R.id.startButton).setOnClickListener {start()}
+        
+        findViewById<Button>(R.id.stopButton).setOnClickListener {stop()}
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.main, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_start -> start()
+            R.id.action_stop -> stop()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun start() {
+        if (isConnected) {
+            if (timerBinder.paused || !timerBinder.isRunning) {
+                timerBinder.start(1000)
+            } else {
+                timerBinder.pause()
             }
         }
-        
-        findViewById<Button>(R.id.stopButton).setOnClickListener {
-            if (isConnected) {
-                if (timerBinder.isRunning) {
-                    timerBinder.stop()
-                    timerTextView.text = "0"
-                }
+    }
+
+    private fun stop() {
+        if (isConnected) {
+            if (timerBinder.isRunning) {
+                timerBinder.stop()
+                timerTextView.text = "0"
             }
         }
     }
